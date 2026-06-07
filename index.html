@@ -19,38 +19,55 @@
     <p id="message"></p>
 
 <script>
-    function showMessage(messageType, word) {
-        if (messageType = "tooShort") {} 
+    secretWord = []
+    guesslist = []
 
+    function showMessage(messageType, word, messageContainerID = "message") {
+        if (messageType == "guessConfirmation") {
+            document.getElementById(messageContainerID).innerHTML = "You guessed \"" + word + "\""
+        } else if (messageType == "tooShort") {
+            document.getElementById(messageContainerID).innerHTML = "\"" + word + "\" is not 5 letters long"
+        } else if (messageType == "notValid") {
+            document.getElementById(messageContainerID).innerHTML = "\"" + word + "\" is not a recognised word"
+        } else if (messageType == "alreadyGuessed") {
+            document.getElementById(messageContainerID).innerHTML = "You already guessed \"" + word + "\""
+        }
     }
 
-
-    guesslist = []
     function handleGuess() {
         var guessWord = document.getElementById("guessField").value;
-        console.log("Handling guess for word " + guessWord);
-        checkGuessIsNewAndValid(guessWord);
+        if (checkGuessIsNewAndValid(guessWord)) {
+            console.log("pass");
+            guesslist.push(guessWord);
+            showMessage("guessConfirmation", guessWord)
+        }
     }
 
     function checkGuessIsNewAndValid(guessWord) {
-        if (checkWordIsValid(guessWord)) {
-            if (checkWordisNew(guessWord)) {
-                document.getElementById("message").innerHTML = "You guessed \"" + guessWord + "\"";
-                guesslist.push(guessWord);
-            }
-        } else {
-            showMessage(invalidword);
-            document.getElementById("message").innerHTML = "\"" + word + "\" is not a valid word";
+        if (!checkWordLength(guessWord, 5)) {
+            showMessage("tooShort", guessWord)
+        } else if (!checkWordIsValid(guessWord)) {
+            showMessage("notValid", guessWord)
         }
+        else if (!checkWordIsNew(guessWord)) {
+            showMessage("alreadyGuessed", guessWord)
+        } 
+        else {
+            return true;
+        }
+        return false;
     }
 
     function checkWordIsValid(word) {
         return largeWordList.includes(word);
     }
 
-    function checkWordisNew(word) {
-        document.getElementById("message").innerHTML = "Already guessed \"" + word + "\" budyd";
+    function checkWordIsNew(word) {
         return !guesslist.includes(word);
+    }
+
+    function checkWordLength(word, length) {
+        return word.length == length;
     }
 
 </script>
