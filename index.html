@@ -1,12 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Test Site</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sammy's Wordle Clone</title>
+    <script src="js/large-word-list.js"></script>
 </head>
 <body>
-  <h1>Welcome to the test site</h1>
+    <h1>This is my Wordle clone</h1>
+    <p>Purpose of this is to see if I can figure out how to do it</p>
+
+    <form id="guessForm">
+        <input id = "guessField" type="text" name="guess" maxlength="5" placeholder="Enter your guess"></input>
+        <input type="button" value="Submit Guess" onclick="handleGuess()"></input>
+    </form>
+    <p id="demo"></p>
+    <p id="message"></p>
+
+<script>
+    function showMessage(messageType, word) {
+        if (messageType = "tooShort") {} 
+
+    }
+
+
+    guesslist = []
+    function handleGuess() {
+        var guessWord = document.getElementById("guessField").value;
+        console.log("Handling guess for word " + guessWord);
+        checkGuessIsNewAndValid(guessWord);
+    }
+
+    function checkGuessIsNewAndValid(guessWord) {
+        if (checkWordIsValid(guessWord)) {
+            if (checkWordisNew(guessWord)) {
+                document.getElementById("message").innerHTML = "You guessed \"" + guessWord + "\"";
+                guesslist.push(guessWord);
+            }
+        } else {
+            showMessage(invalidword);
+            document.getElementById("message").innerHTML = "\"" + word + "\" is not a valid word";
+        }
+    }
+
+    function checkWordIsValid(word) {
+        return largeWordList.includes(word);
+    }
+
+    function checkWordisNew(word) {
+        document.getElementById("message").innerHTML = "Already guessed \"" + word + "\" budyd";
+        return !guesslist.includes(word);
+    }
+
+</script>
 </body>
 </html>
