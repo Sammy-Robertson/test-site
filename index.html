@@ -6,6 +6,36 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Sammy's Wordle Clone</title>
     <script src="js/large-word-list.js"></script>
+    <script src="js/solutions-list.js"></script>
+    <style>
+        .resultRow {
+            display: flex;
+            width: 500px;
+            height: 50px;
+            margin-bottom: 5px;
+        }
+
+        .resultBox {
+            width: 50px;
+            height: 50px;
+            background-color: rgb(255, 255, 255);
+            border: 1px solid black;
+            text-align: center;
+            font-size: 30px;
+            margin-right: 5px;
+        }
+
+        .red {
+            background-color: red;
+        }
+        .green {
+            background-color: green;
+        }
+        .yellow {
+            background-color: yellow;
+        }
+
+    </style>
 </head>
 <body>
     <h1>This is my Wordle clone</h1>
@@ -17,10 +47,107 @@
     </form>
     <p id="demo"></p>
     <p id="message"></p>
+    <div id = "resultRow0" class = "resultRow">
+        <div id = "resultBox00" class = "resultBox"></div>
+        <div id = "resultBox01" class = "resultBox"></div>
+        <div id = "resultBox02" class = "resultBox"></div>
+        <div id = "resultBox03" class = "resultBox"></div>
+        <div id = "resultBox04" class = "resultBox"></div>
+    </div>
+    <div id = "resultRow1" class = "resultRow">
+        <div id = "resultBox10" class = "resultBox"></div>
+        <div id = "resultBox11" class = "resultBox"></div>
+        <div id = "resultBox12" class = "resultBox"></div>
+        <div id = "resultBox13" class = "resultBox"></div>
+        <div id = "resultBox14" class = "resultBox"></div>
+    </div>
+    <div id = "resultRow2" class = "resultRow">
+        <div id = "resultBox20" class = "resultBox"></div>
+        <div id = "resultBox21" class = "resultBox"></div>
+        <div id = "resultBox22" class = "resultBox"></div>
+        <div id = "resultBox23" class = "resultBox"></div>
+        <div id = "resultBox24" class = "resultBox"></div>
+    </div>
+    <div id = "resultRow3" class = "resultRow">
+        <div id = "resultBox30" class = "resultBox"></div>
+        <div id = "resultBox31" class = "resultBox"></div>
+        <div id = "resultBox32" class = "resultBox"></div>
+        <div id = "resultBox33" class = "resultBox"></div>
+        <div id = "resultBox34" class = "resultBox"></div>
+    </div>
+    <div id = "resultRow4" class = "resultRow">
+        <div id = "resultBox40" class = "resultBox"></div>
+        <div id = "resultBox41" class = "resultBox"></div>
+        <div id = "resultBox42" class = "resultBox"></div>
+        <div id = "resultBox43" class = "resultBox"></div>
+        <div id = "resultBox44" class = "resultBox"></div>
+    </div>
 
 <script>
-    secretWord = []
-    guesslist = []
+
+    secretWordIndex = Math.floor(Math.random(solutionsList.length) * solutionsList.length);
+    secretWord = solutionsList[secretWordIndex];
+    guesslist = [];
+    guessNumber = 0;
+
+    document.getElementById("guessField").value = "";
+
+
+    function updateResultRow(rowNo, rowPos, letter, colour) {
+        document.getElementById("resultBox" + rowNo + rowPos).innerHTML = letter;
+    }
+    function updateResultRowColour(rowNo, rowPos, letter, colour) {
+        document.getElementById("resultBox" + rowNo + rowPos).classList.add(colour);
+    }
+
+            
+
+    function checkAndUpdateLetterMatches(guessWord, checkWord, guessno) {
+        letterCounts = {a:0, b:0, c:0, d:0, e:0, f:0, g:0, h:0, i:0, j:0, k:0, l:0, m:0, n:0, o:0, p:0, q:0, r:0, s:0, t:0, u:0, v:0, w:0, x:0, y:0, z:0};
+        greenCounts = {a:0, b:0, c:0, d:0, e:0, f:0, g:0, h:0, i:0, j:0, k:0, l:0, m:0, n:0, o:0, p:0, q:0, r:0, s:0, t:0, u:0, v:0, w:0, x:0, y:0, z:0};
+        yellowCounts = {a:0, b:0, c:0, d:0, e:0, f:0, g:0, h:0, i:0, j:0, k:0, l:0, m:0, n:0, o:0, p:0, q:0, r:0, s:0, t:0, u:0, v:0, w:0, x:0, y:0, z:0};
+
+        for (let i = 0; i < checkWord.length; i++) {
+            letterCounts[checkWord[i]] += 1;
+        }
+
+        for (let i = 0; i < guessWord.length; i++) {
+            if(checkLetterInLocation(checkWord, guessWord[i], i)) {
+                console.log("match");
+                updateResultRowColour(guessno, i, guessWord[i], "green")
+                greenCounts[guessWord[i]] += 1;
+            } else {
+                console.log("no match");
+            }
+            updateResultRow(guessno, i, guessWord[i], "green")
+        }
+        for (let i = 0; i < guessWord.length; i++) {
+            for (let j = 0; j < checkWord.length; j++) {
+                if(checkLetterInLocation(checkWord, guessWord[i], j)) {
+                    if(greenCounts[guessWord[i]] < letterCounts[guessWord[i]]){
+                        if(yellowCounts[guessWord[i]] < letterCounts[guessWord[i]] - greenCounts[guessWord[i]]){
+                            if(!document.getElementById("resultBox" + guessno + i).classList.contains("green")){
+                                updateResultRowColour(guessno, i, guessWord[i], "yellow")
+                                yellowCounts[guessWord[i]] += 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        greentot = 0;
+        for (let i = 0; i < Object.keys(greenCounts).length; i++) {
+            greentot += greenCounts[Object.keys(greenCounts)[i]];
+        }
+        if (greentot == 5) {
+            document.getElementById("message").innerHTML = "you win yay!";
+            guessNumber=6;
+        }
+    }
+
+    function checkLetterInLocation(word, letter, position) {
+        return word[position] == letter;
+    }
 
     function showMessage(messageType, word, messageContainerID = "message") {
         if (messageType == "guessConfirmation") {
@@ -36,11 +163,16 @@
 
     function handleGuess() {
         var guessWord = document.getElementById("guessField").value;
-        if (checkGuessIsNewAndValid(guessWord)) {
-            console.log("pass");
-            guesslist.push(guessWord);
-            showMessage("guessConfirmation", guessWord)
+        if (guessNumber < 6) {
+            if (checkGuessIsNewAndValid(guessWord)) {
+                console.log("pass");
+                guesslist.push(guessWord);
+                showMessage("guessConfirmation", guessWord);
+                checkAndUpdateLetterMatches(guessWord, secretWord, guessNumber);
+                guessNumber += 1;
+            }
         }
+        document.getElementById("guessField").value = "";
     }
 
     function checkGuessIsNewAndValid(guessWord) {
