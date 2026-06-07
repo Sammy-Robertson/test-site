@@ -44,6 +44,7 @@
     <form id="guessForm">
         <input id = "guessField" type="text" name="guess" maxlength="5" placeholder="Enter your guess"></input>
         <input type="button" value="Submit Guess" onclick="handleGuess()"></input>
+        <input type="button" value="Givue Up" onclick="revealWord()"></input>
     </form>
     <p id="demo"></p>
     <p id="message"></p>
@@ -91,6 +92,10 @@
     guessNumber = 0;
 
     document.getElementById("guessField").value = "";
+
+    function revealWord() {
+        document.getElementById("message").innerHTML = "word is " + secretWord;
+    }
 
 
     function updateResultRow(rowNo, rowPos, letter, colour) {
