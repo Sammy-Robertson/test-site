@@ -7,45 +7,14 @@
     <title>Sammy's Wordle Clone</title>
     <script src="js/large-word-list.js"></script>
     <script src="js/solutions-list.js"></script>
-    <style>
-        .resultRow {
-            display: flex;
-            width: 500px;
-            height: 50px;
-            margin-bottom: 5px;
-        }
-
-        .resultBox {
-            width: 50px;
-            height: 50px;
-            background-color: rgb(255, 255, 255);
-            border: 1px solid black;
-            text-align: center;
-            font-size: 30px;
-            margin-right: 5px;
-        }
-
-        .red {
-            background-color: red;
-        }
-        .green {
-            background-color: green;
-        }
-        .yellow {
-            background-color: yellow;
-        }
-
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <h1>This is my Wordle clone</h1>
     <p>Purpose of this is to see if I can figure out how to do it</p>
-
-    <form id="guessForm">
-        <input id = "guessField" type="text" name="guess" maxlength="5" placeholder="Enter your guess"></input>
-        <input type="button" value="Submit Guess" onclick="handleGuess()"></input>
-        <input type="button" value="Givue Up" onclick="revealWord()"></input>
-    </form>
+    <input id = "guessField" type="text" name="guess" maxlength="5" placeholder="Enter your guess">
+    <button id = "submitGuess" type="button" value="Submit Guess" onclick="handleTurn()">test</button>
+    <input type="button" value="Givue Up" onclick="revealWord()"></input>
     <p id="demo"></p>
     <p id="message"></p>
     <div id = "resultRow0" class = "resultRow">
@@ -83,130 +52,44 @@
         <div id = "resultBox43" class = "resultBox"></div>
         <div id = "resultBox44" class = "resultBox"></div>
     </div>
+    <div id = "resultRow5" class = "resultRow">
+        <div id = "resultBox50" class = "resultBox"></div>
+        <div id = "resultBox51" class = "resultBox"></div>
+        <div id = "resultBox52" class = "resultBox"></div>
+        <div id = "resultBox53" class = "resultBox"></div>
+        <div id = "resultBox54" class = "resultBox"></div>
+    </div>
 
-<script>
+    <div class = "keyboard">
+        <div id = "keyA" class = "key">a</div>
+        <div id = "keyB" class = "key">b</div>
+        <div id = "keyC" class = "key">c</div>
+        <div id = "keyD" class = "key">d</div>
+        <div id = "keyE" class = "key">e</div>
+        <div id = "keyF" class = "key">f</div>
+        <div id = "keyG" class = "key">g</div>
+        <div id = "keyH" class = "key">h</div>
+        <div id = "keyI" class = "key">i</div>
+        <div id = "keyJ" class = "key">j</div>
+        <div id = "keyK" class = "key">k</div>
+        <div id = "keyL" class = "key">l</div>
+        <div id = "keyM" class = "key">m</div>
+        <div id = "keyN" class = "key">n</div>
+        <div id = "keyO" class = "key">o</div>
+        <div id = "keyP" class = "key">p</div>
+        <div id = "keyQ" class = "key">q</div>
+        <div id = "keyR" class = "key">r</div>
+        <div id = "keyS" class = "key">s</div>
+        <div id = "keyT" class = "key">t</div>
+        <div id = "keyU" class = "key">u</div>
+        <div id = "keyV" class = "key">v</div>
+        <div id = "keyW" class = "key">w</div>
+        <div id = "keyX" class = "key">x</div>
+        <div id = "keyY" class = "key">y</div>
+        <div id = "keyZ" class = "key">z</div>
+    </div>
 
-    secretWordIndex = Math.floor(Math.random(solutionsList.length) * solutionsList.length);
-    secretWord = solutionsList[secretWordIndex];
-    guesslist = [];
-    guessNumber = 0;
 
-    document.getElementById("guessField").value = "";
-
-    function revealWord() {
-        document.getElementById("message").innerHTML = "word is " + secretWord;
-    }
-
-
-    function updateResultRow(rowNo, rowPos, letter, colour) {
-        document.getElementById("resultBox" + rowNo + rowPos).innerHTML = letter;
-    }
-    function updateResultRowColour(rowNo, rowPos, letter, colour) {
-        document.getElementById("resultBox" + rowNo + rowPos).classList.add(colour);
-    }
-
-            
-
-    function checkAndUpdateLetterMatches(guessWord, checkWord, guessno) {
-        letterCounts = {a:0, b:0, c:0, d:0, e:0, f:0, g:0, h:0, i:0, j:0, k:0, l:0, m:0, n:0, o:0, p:0, q:0, r:0, s:0, t:0, u:0, v:0, w:0, x:0, y:0, z:0};
-        greenCounts = {a:0, b:0, c:0, d:0, e:0, f:0, g:0, h:0, i:0, j:0, k:0, l:0, m:0, n:0, o:0, p:0, q:0, r:0, s:0, t:0, u:0, v:0, w:0, x:0, y:0, z:0};
-        yellowCounts = {a:0, b:0, c:0, d:0, e:0, f:0, g:0, h:0, i:0, j:0, k:0, l:0, m:0, n:0, o:0, p:0, q:0, r:0, s:0, t:0, u:0, v:0, w:0, x:0, y:0, z:0};
-
-        for (let i = 0; i < checkWord.length; i++) {
-            letterCounts[checkWord[i]] += 1;
-        }
-
-        for (let i = 0; i < guessWord.length; i++) {
-            if(checkLetterInLocation(checkWord, guessWord[i], i)) {
-                console.log("match");
-                updateResultRowColour(guessno, i, guessWord[i], "green")
-                greenCounts[guessWord[i]] += 1;
-            } else {
-                console.log("no match");
-            }
-            updateResultRow(guessno, i, guessWord[i], "green")
-        }
-        for (let i = 0; i < guessWord.length; i++) {
-            for (let j = 0; j < checkWord.length; j++) {
-                if(checkLetterInLocation(checkWord, guessWord[i], j)) {
-                    if(greenCounts[guessWord[i]] < letterCounts[guessWord[i]]){
-                        if(yellowCounts[guessWord[i]] < letterCounts[guessWord[i]] - greenCounts[guessWord[i]]){
-                            if(!document.getElementById("resultBox" + guessno + i).classList.contains("green")){
-                                updateResultRowColour(guessno, i, guessWord[i], "yellow")
-                                yellowCounts[guessWord[i]] += 1;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        greentot = 0;
-        for (let i = 0; i < Object.keys(greenCounts).length; i++) {
-            greentot += greenCounts[Object.keys(greenCounts)[i]];
-        }
-        if (greentot == 5) {
-            document.getElementById("message").innerHTML = "you win yay!";
-            guessNumber=6;
-        }
-    }
-
-    function checkLetterInLocation(word, letter, position) {
-        return word[position] == letter;
-    }
-
-    function showMessage(messageType, word, messageContainerID = "message") {
-        if (messageType == "guessConfirmation") {
-            document.getElementById(messageContainerID).innerHTML = "You guessed \"" + word + "\""
-        } else if (messageType == "tooShort") {
-            document.getElementById(messageContainerID).innerHTML = "\"" + word + "\" is not 5 letters long"
-        } else if (messageType == "notValid") {
-            document.getElementById(messageContainerID).innerHTML = "\"" + word + "\" is not a recognised word"
-        } else if (messageType == "alreadyGuessed") {
-            document.getElementById(messageContainerID).innerHTML = "You already guessed \"" + word + "\""
-        }
-    }
-
-    function handleGuess() {
-        var guessWord = document.getElementById("guessField").value;
-        if (guessNumber < 6) {
-            if (checkGuessIsNewAndValid(guessWord)) {
-                console.log("pass");
-                guesslist.push(guessWord);
-                showMessage("guessConfirmation", guessWord);
-                checkAndUpdateLetterMatches(guessWord, secretWord, guessNumber);
-                guessNumber += 1;
-            }
-        }
-        document.getElementById("guessField").value = "";
-    }
-
-    function checkGuessIsNewAndValid(guessWord) {
-        if (!checkWordLength(guessWord, 5)) {
-            showMessage("tooShort", guessWord)
-        } else if (!checkWordIsValid(guessWord)) {
-            showMessage("notValid", guessWord)
-        }
-        else if (!checkWordIsNew(guessWord)) {
-            showMessage("alreadyGuessed", guessWord)
-        } 
-        else {
-            return true;
-        }
-        return false;
-    }
-
-    function checkWordIsValid(word) {
-        return largeWordList.includes(word);
-    }
-
-    function checkWordIsNew(word) {
-        return !guesslist.includes(word);
-    }
-
-    function checkWordLength(word, length) {
-        return word.length == length;
-    }
-
-</script>
+    <script src="js/script.js"></script>
 </body>
 </html>
